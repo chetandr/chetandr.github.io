@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		<div style="position: relative">
+			<video
+				id="video"
+				width="640"
+				height="480"
+				autoplay
+				style="position: absolute; top: 0px; right: 0px"
+			></video>
+			<canvas
+				id="overlay"
+				width="640"
+				height="480"
+				style="position: absolute; top: 0px; right: 0px"
+			></canvas>
+            <button id="snap" style="margin-top:50px; position: absolute; top: 0px; right: 0px">Snap Photo</button>
+		</div>
+
+		<canvas id="canvas" width="640" height="480"></canvas>
+		
+
+		<script>
+			const video = document.getElementById("video");
+			const canvas = document.getElementById("canvas");
+			const overlay = document.getElementById("overlay");
+			const context = canvas.getContext("2d");
+			const ctx = overlay.getContext("2d");
+
+			function drawEllipse(ctx, x, y, w, h) {
+				var kappa = 0.5522848,
+					ox = (w / 2) * kappa, // control point offset horizontal
+					oy = (h / 2) * kappa, // control point offset vertical
+					xe = x + w, // x-end
+					ye = y + h, // y-end
+					xm = x + w / 2, // x-middle
+					ym = y + h / 2; // y-middle
+
+				ctx.beginPath();
+				ctx.moveTo(x, ym);
+                
+				ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+				ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+				ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+				ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+				//ctx.closePath(); // not used correctly, see comments (use to close off open path)
+				ctx.stroke();
+			}
+
+			// Get access to the camera!
+			if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+				// Not adding `{ audio: true }` since we only want video now
+				navigator.mediaDevices
+					.getUserMedia({ video: true })
+					.then(function (stream) {
+						//video.src = window.URL.createObjectURL(stream);
+						video.srcObject = stream;
+						video.play();
+					});
+			}
+
+			document.getElementById("snap").addEventListener("click", function () {
+				context.drawImage(video, 0, 0, 640, 480);
+			});
+
+			ctx.beginPath();
+            ctx.lineWidth = 10;
+            ctx.strokeStyle  = "#FFFFFF";
+
+			drawEllipse(ctx, 200, 75, 300, 400);
+			// ctx.stroke();
+		</script>
+	</body>
+</html>
