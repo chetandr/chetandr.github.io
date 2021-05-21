@@ -114,7 +114,23 @@
 			// List cameras and microphones.
 
 			var imageCapture;
+			navigator.mediaDevices
+				.enumerateDevices()
+				.then(function (devices) {
+					devices.forEach(function (device) {
+						const div = document.createElement("div");
+						div.innerText = JSON.stringify(device);
+						div.style.border = "solid 1px #000";
+						debug.append(div)
+					});
+				})
+				.catch(function (err) {
+					console.log(err.name + ": " + err.message);
+				});
 
+			document.getElementById("snap").addEventListener("click", function () {
+				context.drawImage(video, 0, 0);
+			});
 			navigator.mediaDevices
 				.getUserMedia({ video: true })
 				.then((mediaStream) => {
