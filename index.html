@@ -6,9 +6,10 @@
 				position: relative;
 			}
 
-			/* video {
+			video {
 				width: 300px;
-			} */
+				display: none;
+			}
 
 			#changeVideo {
 				position: absolute;
@@ -80,8 +81,8 @@
 			// const ctx = overlay.getContext("2d");
 			const img = document.getElementById("photo");
 			const a = document.createElement("a");
-			video.height = window.innerHeight;
-			video.width = window.innerWidth;
+			// video.height = window.innerHeight;
+			// video.width = window.innerWidth;
 			document.body.appendChild(a);
 			a.style = "display: none";
 			function drawEllipse(ctx, x, y, w, h) {
@@ -118,10 +119,16 @@
 				.getUserMedia({ video: true })
 				.then((mediaStream) => {
 					document.querySelector("video").srcObject = mediaStream;
+					
 					let track = "";
 					tracks = mediaStream.getVideoTracks();
+					
 					let targetTrack = tracks[0];
 					tracks.map((t) => {
+						const div = document.createElement("div")
+						div.innerText = `${t.label}  ${t.label.indexOf("back")}`;
+						div.style.border = "solid 1px #000";
+						debug.appendChild(div)
 						if (t.label.indexOf("back") > -1) {
 							targetTrack = t;
 						}
