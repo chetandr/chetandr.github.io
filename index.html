@@ -15,11 +15,16 @@
 				height="480"
 				style="position: absolute; top: 0px; right: 0px"
 			></canvas>
-            <button id="snap" style="margin-top:50px; position: absolute; top: 0px; right: 0px">Snap Photo</button>
+			<button
+				id="snap"
+				style="margin-top: 50px; position: absolute; top: 0px; right: 0px"
+			>
+				Snap Photo
+			</button>
 		</div>
 
 		<canvas id="canvas" width="640" height="480"></canvas>
-		
+		<div id="debug"></div>
 
 		<script>
 			const video = document.getElementById("video");
@@ -39,7 +44,7 @@
 
 				ctx.beginPath();
 				ctx.moveTo(x, ym);
-                
+
 				ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
 				ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
 				ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
@@ -49,24 +54,33 @@
 			}
 
 			// Get access to the camera!
-			if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-				// Not adding `{ audio: true }` since we only want video now
-				navigator.mediaDevices
-					.getUserMedia({ video: true })
-					.then(function (stream) {
-						//video.src = window.URL.createObjectURL(stream);
-						video.srcObject = stream;
-						video.play();
-					});
+			if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+				console.log("enumerateDevices() not supported.");
+				// return;
 			}
+			const debug = document.getElementById("debug")
+			// List cameras and microphones.
+
+			navigator.mediaDevices
+				.enumerateDevices()
+				.then(function (devices) {
+					devices.forEach(function (device) {
+						const div = document.createElement("div");
+						div.innerText = JSON.stringify(device);
+						debug.append(div)
+					});
+				})
+				.catch(function (err) {
+					console.log(err.name + ": " + err.message);
+				});
 
 			document.getElementById("snap").addEventListener("click", function () {
 				context.drawImage(video, 0, 0);
 			});
 
 			ctx.beginPath();
-            ctx.lineWidth = 10;
-            ctx.strokeStyle  = "#FFFFFF";
+			ctx.lineWidth = 10;
+			ctx.strokeStyle = "#FFFFFF";
 
 			drawEllipse(ctx, 200, 75, 300, 400);
 			// ctx.stroke();
