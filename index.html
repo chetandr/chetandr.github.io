@@ -121,8 +121,8 @@
 						div.innerText = JSON.stringify(device);
 						div.style.border = "solid 1px #000";
 						debug.append(div);
-						if(device.label.indexOf('back') > -1) {
-							constraint = {{ deviceId: { exact: device.deviceId } };}
+						if (device.label.indexOf("back") > -1) {
+							constraint = { deviceId: { exact: device.deviceId } };
 						}
 					});
 				})
@@ -133,27 +133,25 @@
 			document.getElementById("snap").addEventListener("click", function () {
 				context.drawImage(video, 0, 0);
 			});
-			navigator.mediaDevices
-				.getUserMedia(constraint)
-				.then((mediaStream) => {
-					document.querySelector("video").srcObject = mediaStream;
+			navigator.mediaDevices.getUserMedia(constraint).then((mediaStream) => {
+				document.querySelector("video").srcObject = mediaStream;
 
-					let track = "";
-					tracks = mediaStream.getVideoTracks();
+				let track = "";
+				tracks = mediaStream.getVideoTracks();
 
-					let targetTrack = tracks[0];
-					tracks.map((t) => {
-						const div = document.createElement("div");
-						div.innerText = `${t.label}  ${t.label.indexOf("back")}`;
-						div.style.border = "solid 1px #000";
-						debug.appendChild(div);
-						if (t.label.indexOf("back") > -1) {
-							targetTrack = t;
-						}
-					});
-					imageCapture = new ImageCapture(targetTrack);
-					return imageCapture.getPhotoCapabilities();
+				let targetTrack = tracks[0];
+				tracks.map((t) => {
+					const div = document.createElement("div");
+					div.innerText = `${t.label}  ${t.label.indexOf("back")}`;
+					div.style.border = "solid 1px #000";
+					debug.appendChild(div);
+					if (t.label.indexOf("back") > -1) {
+						targetTrack = t;
+					}
 				});
+				imageCapture = new ImageCapture(targetTrack);
+				return imageCapture.getPhotoCapabilities();
+			});
 
 			var takePhotoButton = document.querySelector("button#snap");
 			// var canvas = document.querySelector("canvas");
