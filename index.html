@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta name="viewport" content="height=width=device-height, width=device-width, initial-scale=1.0" />
 		<style>
 			#container {
 				position: relative;
@@ -104,14 +105,19 @@
 				// return;
 			}
 			const debug = document.getElementById("debug");
+			debug.style.display = "none";
 			// List cameras and microphones.
-			let constraint = {
-				video: {
-					facingMode: {
-						exact: "environment",
-					},
-				},
-			};
+			const p = "q";
+			let constraint =
+				p == "t"
+					? {
+							video: {
+								facingMode: {
+									exact: "environment",
+								},
+							},
+					  }
+					: { video: true };
 			var imageCapture;
 			navigator.mediaDevices
 				.enumerateDevices()
