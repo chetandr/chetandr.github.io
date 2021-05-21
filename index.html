@@ -71,13 +71,14 @@
 				.then((mediaStream) => {
 					document.querySelector("video").srcObject = mediaStream;
 					let track = "";
-					if(mediaStream.getVideoTracks()[1]) {
-						track = mediaStream.getVideoTracks()[1];
-					} else {
-						track = mediaStream.getVideoTracks()[0]
-					}
-					imageCapture = new ImageCapture(track);
-					console.log(imageCapture.getPhotoCapabilities());
+					tracks = mediaStream.getVideoTracks();
+					let targetTrack = tracks[0];
+					tracks.map(t => {
+						if(t.label.indexOf('back') > -1) {
+							targetTrack = t;
+						}
+					})
+					imageCapture = new ImageCapture(targetTrack);
 					return imageCapture.getPhotoCapabilities();
 				});
 
