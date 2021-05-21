@@ -6,10 +6,10 @@
 				position: relative;
 			}
 
-			video {
+			/* video {
 				width: 300px;
 				display: none;
-			}
+			} */
 
 			#changeVideo {
 				position: absolute;
@@ -80,8 +80,8 @@
 			// const ctx = overlay.getContext("2d");
 			const img = document.getElementById("photo");
 			const a = document.createElement("a");
-			// video.height = window.innerHeight;
-			// video.width = window.innerWidth;
+			video.height = window.innerHeight;
+			video.width = window.innerWidth;
 			document.body.appendChild(a);
 			a.style = "display: none";
 			function drawEllipse(ctx, x, y, w, h) {
