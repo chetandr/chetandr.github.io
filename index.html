@@ -1,39 +1,87 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<style>
+			#container {
+				position: relative;
+			}
+
+			/* video {
+				width: 300px;
+			} */
+
+			#changeVideo {
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				width: 25px;
+				height: 25px;
+				opacity: 0;
+				transition: opacity 0.3s ease;
+				cursor: pointer;
+
+				/* Additional styles just to increase visual appeal */
+				border-radius: 50%;
+				background: #ffffffdd;
+				color: red;
+				font-weight: bold;
+				line-height: 25px;
+				text-align: center;
+				/* End */
+			}
+
+			/* On hovering the video, show the button */
+			video:hover ~ #changeVideo {
+				opacity: 1;
+			}
+
+			#changeVideo:hover {
+				opacity: 1;
+			}
+		</style>
+	</head>
 	<body>
-		<div style="position: relative">
-			<video
-				id="video"
-				width="640"
-				height="480"
-				autoplay
-				style="position: absolute; top: 0px; right: 0px"
-			></video>
-			<canvas
-				id="overlay"
-				width="640"
-				height="480"
-				style="position: absolute; top: 0px; right: 0px"
-			></canvas>
-			<button
+		<div class="container">
+			<div>
+				<video
+					id="video"
+					width="640px"
+					height="480px"
+					autoplay
+					style="position: absolute; top: 0px; left: 0px"
+				></video>
+			</div>
+			<div id="changeVideo">
+				<button
 				id="snap"
-				style="margin-top: 50px; position: absolute; top: 0px; right: 0px"
+				style="
+					margin-top: 50px;
+					top: 0px;
+					right: 0px;
+					padding: 20px;
+					background-color: #3f4756;
+					color: #ffffff;
+				"
 			>
-				Snap Photo
+				Capture Image
 			</button>
+			</div>
+			
 		</div>
 
-		<canvas id="canvas" width="640" height="480"></canvas>
 		<div id="debug"></div>
 		<img id="photo" />
 		<script>
 			const video = document.getElementById("video");
-			const canvas = document.getElementById("canvas");
-			const overlay = document.getElementById("overlay");
-			const context = canvas.getContext("2d");
-			const ctx = overlay.getContext("2d");
+
+			// const canvas = document.getElementById("canvas");
+			// const overlay = document.getElementById("overlay");
+			// const context = canvas.getContext("2d");
+			// const ctx = overlay.getContext("2d");
 			const img = document.getElementById("photo");
 			const a = document.createElement("a");
+			video.height = window.innerHeight;
+			video.width = window.innerWidth;
 			document.body.appendChild(a);
 			a.style = "display: none";
 			function drawEllipse(ctx, x, y, w, h) {
@@ -73,11 +121,11 @@
 					let track = "";
 					tracks = mediaStream.getVideoTracks();
 					let targetTrack = tracks[0];
-					tracks.map(t => {
-						if(t.label.indexOf('back') > -1) {
+					tracks.map((t) => {
+						if (t.label.indexOf("back") > -1) {
 							targetTrack = t;
 						}
-					})
+					});
 					imageCapture = new ImageCapture(targetTrack);
 					return imageCapture.getPhotoCapabilities();
 				});
@@ -85,7 +133,7 @@
 			var takePhotoButton = document.querySelector("button#snap");
 			// var canvas = document.querySelector("canvas");
 
-			takePhotoButton.onclick = takePhoto;
+			video.onclick = takePhoto;
 
 			function takePhoto() {
 				imageCapture
@@ -104,11 +152,11 @@
 					});
 			}
 
-			ctx.beginPath();
-			ctx.lineWidth = 10;
-			ctx.strokeStyle = "#FFFFFF";
+			// ctx.beginPath();
+			// ctx.lineWidth = 10;
+			// ctx.strokeStyle = "#FFFFFF";
 
-			drawEllipse(ctx, 200, 75, 300, 400);
+			// drawEllipse(ctx, 200, 75, 300, 400);
 			// ctx.stroke();
 		</script>
 	</body>
