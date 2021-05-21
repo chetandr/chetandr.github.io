@@ -25,14 +25,17 @@
 
 		<canvas id="canvas" width="640" height="480"></canvas>
 		<div id="debug"></div>
-
+		<img id="photo" />
 		<script>
 			const video = document.getElementById("video");
 			const canvas = document.getElementById("canvas");
 			const overlay = document.getElementById("overlay");
 			const context = canvas.getContext("2d");
 			const ctx = overlay.getContext("2d");
-
+			const img = document.getElementById("photo");
+			const a = document.createElement("a");
+			document.body.appendChild(a);
+			a.style = "display: none";
 			function drawEllipse(ctx, x, y, w, h) {
 				var kappa = 0.5522848,
 					ox = (w / 2) * kappa, // control point offset horizontal
@@ -58,25 +61,47 @@
 				console.log("enumerateDevices() not supported.");
 				// return;
 			}
-			const debug = document.getElementById("debug")
+			const debug = document.getElementById("debug");
 			// List cameras and microphones.
 
+			var imageCapture;
+
 			navigator.mediaDevices
-				.enumerateDevices()
-				.then(function (devices) {
-					devices.forEach(function (device) {
-						const div = document.createElement("div");
-						div.innerText = JSON.stringify(device);
-						debug.append(div)
-					});
-				})
-				.catch(function (err) {
-					console.log(err.name + ": " + err.message);
+				.getUserMedia({ video: true })
+				.then((mediaStream) => {
+					document.querySelector("video").srcObject = mediaStream;
+					let track = "";
+					if(mediaStream.getVideoTracks()[1]) {
+						track = mediaStream.getVideoTracks()[1];
+					} else {
+						track = mediaStream.getVideoTracks()[0]
+					}
+					imageCapture = new ImageCapture(track);
+					console.log(imageCapture.getPhotoCapabilities());
+					return imageCapture.getPhotoCapabilities();
 				});
 
-			document.getElementById("snap").addEventListener("click", function () {
-				context.drawImage(video, 0, 0);
-			});
+			var takePhotoButton = document.querySelector("button#snap");
+			// var canvas = document.querySelector("canvas");
+
+			takePhotoButton.onclick = takePhoto;
+
+			function takePhoto() {
+				imageCapture
+					.takePhoto()
+					.then(function (blob) {
+						console.log("Took photo:", blob);
+						img.classList.remove("hidden");
+						url = URL.createObjectURL(blob);
+						a.href = url;
+						a.download = "MyPhoto.png";
+						a.click();
+						window.URL.revokeObjectURL(url);
+					})
+					.catch(function (error) {
+						console.log("takePhoto() error: ", error);
+					});
+			}
 
 			ctx.beginPath();
 			ctx.lineWidth = 10;
