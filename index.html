@@ -105,7 +105,13 @@
 			}
 			const debug = document.getElementById("debug");
 			// List cameras and microphones.
-			let constraint = { video: true };
+			let constraint = {
+				video: {
+					facingMode: {
+						exact: "environment",
+					},
+				},
+			};
 			var imageCapture;
 			navigator.mediaDevices
 				.enumerateDevices()
@@ -119,31 +125,6 @@
 							constraint = { deviceId: { exact: device.deviceId } };
 						}
 					});
-					const div1 = document.createElement("div");
-					div1.innerText = JSON.stringify(constraint);
-					div1.style.border = "solid 1px #000";
-					debug.append(div1);
-					navigator.mediaDevices
-						.getUserMedia(constraint)
-						.then((mediaStream) => {
-							document.querySelector("video").srcObject = mediaStream;
-
-							let track = "";
-							tracks = mediaStream.getVideoTracks();
-
-							let targetTrack = tracks[0];
-							tracks.map((t) => {
-								const div = document.createElement("div");
-								div.innerText = `${t.label}  ${t.label.indexOf("back")}`;
-								div.style.border = "solid 1px #000";
-								debug.appendChild(div);
-								if (t.label.indexOf("back") > -1) {
-									targetTrack = t;
-								}
-							});
-							imageCapture = new ImageCapture(targetTrack);
-							return imageCapture.getPhotoCapabilities();
-						});
 				})
 				.catch(function (err) {
 					console.log(err.name + ": " + err.message);
@@ -151,6 +132,25 @@
 
 			document.getElementById("snap").addEventListener("click", function () {
 				context.drawImage(video, 0, 0);
+			});
+			navigator.mediaDevices.getUserMedia(constraint).then((mediaStream) => {
+				document.querySelector("video").srcObject = mediaStream;
+
+				let track = "";
+				tracks = mediaStream.getVideoTracks();
+
+				let targetTrack = tracks[0];
+				tracks.map((t) => {
+					const div = document.createElement("div");
+					div.innerText = `${t.label}  ${t.label.indexOf("back")}`;
+					div.style.border = "solid 1px #000";
+					debug.appendChild(div);
+					if (t.label.indexOf("back") > -1) {
+						targetTrack = t;
+					}
+				});
+				imageCapture = new ImageCapture(targetTrack);
+				return imageCapture.getPhotoCapabilities();
 			});
 
 			var takePhotoButton = document.querySelector("button#snap");
