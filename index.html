@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta
-			name="viewport"
-			content="height=width=device-height, width=device-width, initial-scale=1.0"
-		/>
+		<meta name="viewport" content="height=width=device-height, width=device-width, initial-scale=1.0" />
 		<style>
 			#container {
 				position: relative;
@@ -49,7 +46,7 @@
 		<div id="debug"></div>
 		<div class="container">
 			<div>
-				<video id="video" width="640px" height="480px" autoplay></video>
+				<video id="video" width="640px" height="480px" autoplay style="display:none"></video>
 			</div>
 			<div id="changeVideo">
 				<button
@@ -70,18 +67,18 @@
 
 		<img id="photo" />
 		<script>
-			const video = document.getElementById("video");
+			const video = document.getElementById('video');
 
 			// const canvas = document.getElementById("canvas");
 			// const overlay = document.getElementById("overlay");
 			// const context = canvas.getContext("2d");
 			// const ctx = overlay.getContext("2d");
-			const img = document.getElementById("photo");
-			const a = document.createElement("a");
+			const img = document.getElementById('photo');
+			const a = document.createElement('a');
 			video.height = window.innerHeight;
 			video.width = window.innerWidth;
 			document.body.appendChild(a);
-			a.style = "display: none";
+			a.style = 'display: none';
 			function drawEllipse(ctx, x, y, w, h) {
 				var kappa = 0.5522848,
 					ox = (w / 2) * kappa, // control point offset horizontal
@@ -104,22 +101,27 @@
 
 			// Get access to the camera!
 			if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-				console.log("enumerateDevices() not supported.");
+				console.log('enumerateDevices() not supported.');
 				// return;
 			}
-			const debug = document.getElementById("debug");
-			debug.style.display = "none";
+			const debug = document.getElementById('debug');
+			debug.style.display = 'none';
 			// List cameras and microphones.
-			const p = "t";
+			const p = 't';
 			let constraint =
-				p == "t"
+				p == 't'
 					? {
 							video: {
-								facingMode: {
-									exact: "environment",
+								width: {
+									min: 1280,
+									ideal: 1920,
+									max: 2560,
 								},
-								width: { ideal: 4096 },
-								height: { ideal: 2160 },
+								height: {
+									min: 720,
+									ideal: 1080,
+									max: 1440,
+								},
 							},
 					  }
 					: { video: true };
@@ -128,35 +130,32 @@
 				.enumerateDevices()
 				.then(function (devices) {
 					devices.forEach(function (device) {
-						const div = document.createElement("div");
+						const div = document.createElement('div');
 						div.innerText = JSON.stringify(device);
-						div.style.border = "solid 1px #000";
+						div.style.border = 'solid 1px #000';
 						debug.append(div);
-						if (device.label.indexOf("back") > -1) {
-							constraint = { deviceId: { exact: device.deviceId } };
-						}
 					});
 				})
 				.catch(function (err) {
-					console.log(err.name + ": " + err.message);
+					console.log(err.name + ': ' + err.message);
 				});
 
-			document.getElementById("snap").addEventListener("click", function () {
+			document.getElementById('snap').addEventListener('click', function () {
 				context.drawImage(video, 0, 0);
 			});
 			navigator.mediaDevices.getUserMedia(constraint).then((mediaStream) => {
-				document.querySelector("video").srcObject = mediaStream;
+				document.querySelector('video').srcObject = mediaStream;
 
-				let track = "";
+				let track = '';
 				tracks = mediaStream.getVideoTracks();
 
 				let targetTrack = tracks[0];
 				tracks.map((t) => {
-					const div = document.createElement("div");
-					div.innerText = `${t.label}  ${t.label.indexOf("back")}`;
-					div.style.border = "solid 1px #000";
+					const div = document.createElement('div');
+					div.innerText = `${t.label}  ${t.label.indexOf('back')}`;
+					div.style.border = 'solid 1px #000';
 					debug.appendChild(div);
-					if (t.label.indexOf("back") > -1) {
+					if (t.label.indexOf('back') > -1) {
 						targetTrack = t;
 					}
 				});
@@ -164,7 +163,7 @@
 				return imageCapture.getPhotoCapabilities();
 			});
 
-			var takePhotoButton = document.querySelector("button#snap");
+			var takePhotoButton = document.querySelector('button#snap');
 			// var canvas = document.querySelector("canvas");
 
 			video.onclick = takePhoto;
@@ -173,16 +172,16 @@
 				imageCapture
 					.takePhoto()
 					.then(function (blob) {
-						console.log("Took photo:", blob);
-						img.classList.remove("hidden");
+						console.log('Took photo:', blob);
+						img.classList.remove('hidden');
 						url = URL.createObjectURL(blob);
 						a.href = url;
-						a.download = "MyPhoto.png";
+						a.download = 'MyPhoto.png';
 						a.click();
 						window.URL.revokeObjectURL(url);
 					})
 					.catch(function (error) {
-						console.log("takePhoto() error: ", error);
+						console.log('takePhoto() error: ', error);
 					});
 			}
 
