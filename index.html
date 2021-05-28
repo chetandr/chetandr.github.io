@@ -186,8 +186,9 @@
 			// }
 
 			const getCamera = async () => {
-				const devices = navigator.mediaDevices.enumerateDevices();
-				devices.forEach(function (device) {
+				const devices = await navigator.mediaDevices.enumerateDevices();
+				
+				devices.map(function (device) {
 					const div = document.createElement('div');
 					div.innerText = JSON.stringify(device);
 					div.style.border = 'solid 1px #000';
@@ -198,12 +199,12 @@
 					(device) => device.kind === 'videoinput' && device.label.indexOf('back') >= 0,
 				);
 				const div = document.createElement('div');
-				div.innerText = JSON.stringify(device);
+				div.innerText = JSON.stringify(backDevice);
 				div.style.border = 'solid 1px #000';
 				div.style.color = '#f00';
 				debug.append(div);
 			};
-
+			getCamera();
 			// ctx.beginPath();
 			// ctx.lineWidth = 10;
 			// ctx.strokeStyle = "#FFFFFF";
