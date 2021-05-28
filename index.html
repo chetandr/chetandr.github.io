@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<script src="adapter.js"></script>
 		<meta name="viewport" content="height=width=device-height, width=device-width, initial-scale=1.0" />
 		<style>
 			#container {
@@ -67,7 +68,7 @@
 		<div>
 			<canvas id="canvas"> </canvas>
 		</div>
-		<a id="downloadAnchor" href="">image</a>
+		<a id="downloadAnchor" href="" style="display: none;">image</a>
 		<img id="photo" />
 		<script>
 			const img = document.getElementById('photo');
@@ -76,6 +77,35 @@
 			// a.style = 'display: none';
 			let imageCapture;
 			let div;
+
+			const getVideo = async (constraint) => {
+				const mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
+				document.querySelector('video').srcObject = mediaStream;
+				tracks = await mediaStream.getVideoTracks();
+				// imageCapture = new ImageCapture(tracks[0]);
+				// const imageHandle = await imageCapture.getPhotoCapabilities();
+				div = document.createElement('div');
+				div.innerText = 'No Back Camera';
+				div.style.border = 'solid 1px #000';
+				div.style.color = '#fff';
+				div.style.backgroundColor = '#f00';
+				video.addEventListener('click', () => {
+					const context = canvas.getContext('2d');
+					canvas.width = 1280;
+					canvas.height = 720;
+					context.drawImage(video, 0, 0, 1280, 720);
+					var url = canvas.toDataURL('image/png');
+					img.setAttribute('src', url);
+					canvas.style.display = 'none';
+					img.style.display = 'none';
+					a.href = url;
+					a.download = 'MyPhoto.png';
+					a.click();
+
+					window.URL.revokeObjectURL(url);
+				});
+			};
+
 			const getCamera = async () => {
 				const devices = await navigator.mediaDevices.enumerateDevices();
 
@@ -110,40 +140,8 @@
 							deviceId: backDevice[0].deviceId,
 						},
 					};
-
-					const mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
-					document.querySelector('video').srcObject = mediaStream;
-					tracks = await mediaStream.getVideoTracks();
-					// imageCapture = new ImageCapture(tracks[0]);
-					// const imageHandle = await imageCapture.getPhotoCapabilities();
-					div = document.createElement('div');
-					div.innerText = 'No Back Camera';
-					div.style.border = 'solid 1px #000';
-					div.style.color = '#fff';
-					div.style.backgroundColor = '#f00';
-					video.addEventListener('click', () => {
-						const context = canvas.getContext('2d');
-						canvas.width = 1280;
-						canvas.height = 720;
-						context.drawImage(video, 0, 0, 1280, 720);
-						var url = canvas.toDataURL('image/png');
-						img.setAttribute('src', url);
-						canvas.style.display = 'none';
-						img.style.display = 'none';
-						a.href = url;
-						a.download = 'MyPhoto.png';
-						a.click();
-
-						window.URL.revokeObjectURL(url);
-
-					});
+					getVideo(constraint);
 				} else {
-					div = document.createElement('div');
-					div.innerText = 'No Back Camera';
-					div.style.border = 'solid 1px #000';
-					div.style.color = '#fff';
-					div.style.backgroundColor = '#f00';
-					debug.append(div);
 					let constraint = {
 						video: {
 							width: {
@@ -158,30 +156,7 @@
 							},
 						},
 					};
-					const mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
-					document.querySelector('video').srcObject = mediaStream;
-					tracks = await mediaStream.getVideoTracks();
-					div = document.createElement('div');
-					div.innerText = 'No Back Camera';
-					div.style.border = 'solid 1px #000';
-					div.style.color = '#fff';
-					div.style.backgroundColor = '#f00';
-					video.addEventListener('click', () => {
-						const context = canvas.getContext('2d');
-						canvas.width = 1280;
-						canvas.height = 720;
-						context.drawImage(video, 0, 0, 1280, 720);
-						var url = canvas.toDataURL('image/png');
-						img.setAttribute('src', url);
-						canvas.style.display = 'none';
-						img.style.display = 'none';
-						a.href = url;
-						a.download = 'MyPhoto.png';
-						a.click();
-
-						window.URL.revokeObjectURL(url);
-
-					});
+					getVideo(constraint);
 				}
 			};
 
