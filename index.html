@@ -46,7 +46,7 @@
 		<div id="debug"></div>
 		<div class="container">
 			<div>
-				<video id="video" width="640px" height="480px" autoplay style="display:none"></video>
+				<video id="video" width="640px" height="480px" autoplay style="display: none"></video>
 			</div>
 			<div id="changeVideo">
 				<button
@@ -67,123 +67,142 @@
 
 		<img id="photo" />
 		<script>
-			const video = document.getElementById('video');
+			// const video = document.getElementById('video');
 
-			// const canvas = document.getElementById("canvas");
-			// const overlay = document.getElementById("overlay");
-			// const context = canvas.getContext("2d");
-			// const ctx = overlay.getContext("2d");
-			const img = document.getElementById('photo');
-			const a = document.createElement('a');
-			video.height = window.innerHeight;
-			video.width = window.innerWidth;
-			document.body.appendChild(a);
-			a.style = 'display: none';
-			function drawEllipse(ctx, x, y, w, h) {
-				var kappa = 0.5522848,
-					ox = (w / 2) * kappa, // control point offset horizontal
-					oy = (h / 2) * kappa, // control point offset vertical
-					xe = x + w, // x-end
-					ye = y + h, // y-end
-					xm = x + w / 2, // x-middle
-					ym = y + h / 2; // y-middle
+			// // const canvas = document.getElementById("canvas");
+			// // const overlay = document.getElementById("overlay");
+			// // const context = canvas.getContext("2d");
+			// // const ctx = overlay.getContext("2d");
+			// const img = document.getElementById('photo');
+			// const a = document.createElement('a');
+			// video.height = window.innerHeight;
+			// video.width = window.innerWidth;
+			// document.body.appendChild(a);
+			// a.style = 'display: none';
+			// function drawEllipse(ctx, x, y, w, h) {
+			// 	var kappa = 0.5522848,
+			// 		ox = (w / 2) * kappa, // control point offset horizontal
+			// 		oy = (h / 2) * kappa, // control point offset vertical
+			// 		xe = x + w, // x-end
+			// 		ye = y + h, // y-end
+			// 		xm = x + w / 2, // x-middle
+			// 		ym = y + h / 2; // y-middle
 
-				ctx.beginPath();
-				ctx.moveTo(x, ym);
+			// 	ctx.beginPath();
+			// 	ctx.moveTo(x, ym);
 
-				ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
-				ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
-				ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
-				ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
-				//ctx.closePath(); // not used correctly, see comments (use to close off open path)
-				ctx.stroke();
-			}
+			// 	ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+			// 	ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+			// 	ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+			// 	ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+			// 	//ctx.closePath(); // not used correctly, see comments (use to close off open path)
+			// 	ctx.stroke();
+			// }
 
-			// Get access to the camera!
-			if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-				console.log('enumerateDevices() not supported.');
-				// return;
-			}
-			const debug = document.getElementById('debug');
-			// debug.style.display = 'none';
-			// List cameras and microphones.
-			const p = 't';
-			let constraint =
-				p == 't'
-					? {
-							video: {
-								width: {
-									min: 1280,
-									ideal: 1920,
-									max: 2560,
-								},
-								height: {
-									min: 720,
-									ideal: 1080,
-									max: 1440,
-								},
-							},
-					  }
-					: { video: true };
-			var imageCapture;
-			navigator.mediaDevices
-				.enumerateDevices()
-				.then(function (devices) {
-					devices.forEach(function (device) {
-						const div = document.createElement('div');
-						div.innerText = JSON.stringify(device);
-						div.style.border = 'solid 1px #000';
-						debug.append(div);
-					});
-				})
-				.catch(function (err) {
-					console.log(err.name + ': ' + err.message);
-				});
+			// // Get access to the camera!
+			// if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+			// 	console.log('enumerateDevices() not supported.');
+			// 	// return;
+			// }
+			// const debug = document.getElementById('debug');
+			// // debug.style.display = 'none';
+			// // List cameras and microphones.
+			// const p = 't';
+			// let constraint =
+			// 	p == 't'
+			// 		? {
+			// 				video: {
+			// 					width: {
+			// 						min: 1280,
+			// 						ideal: 1920,
+			// 						max: 2560,
+			// 					},
+			// 					height: {
+			// 						min: 720,
+			// 						ideal: 1080,
+			// 						max: 1440,
+			// 					},
+			// 				},
+			// 		  }
+			// 		: { video: true };
+			// var imageCapture;
+			// navigator.mediaDevices
+			// 	.enumerateDevices()
+			// 	.then(function (devices) {
+			// 		devices.forEach(function (device) {
+			// 			const div = document.createElement('div');
+			// 			div.innerText = JSON.stringify(device);
+			// 			div.style.border = 'solid 1px #000';
+			// 			debug.append(div);
+			// 		});
+			// 	})
+			// 	.catch(function (err) {
+			// 		console.log(err.name + ': ' + err.message);
+			// 	});
 
-			document.getElementById('snap').addEventListener('click', function () {
-				context.drawImage(video, 0, 0);
-			});
-			navigator.mediaDevices.getUserMedia(constraint).then((mediaStream) => {
-				document.querySelector('video').srcObject = mediaStream;
+			// document.getElementById('snap').addEventListener('click', function () {
+			// 	context.drawImage(video, 0, 0);
+			// });
+			// navigator.mediaDevices.getUserMedia(constraint).then((mediaStream) => {
+			// 	document.querySelector('video').srcObject = mediaStream;
 
-				let track = '';
-				tracks = mediaStream.getVideoTracks();
+			// 	let track = '';
+			// 	tracks = mediaStream.getVideoTracks();
 
-				let targetTrack = tracks[0];
-				tracks.map((t) => {
+			// 	let targetTrack = tracks[0];
+			// 	tracks.map((t) => {
+			// 		const div = document.createElement('div');
+			// 		div.innerText = `${t.label}  ${t.label.indexOf('back')}`;
+			// 		div.style.border = 'solid 1px #000';
+			// 		debug.appendChild(div);
+			// 		if (t.label.indexOf('back') > -1) {
+			// 			targetTrack = t;
+			// 		}
+			// 	});
+			// 	imageCapture = new ImageCapture(targetTrack);
+			// 	return imageCapture.getPhotoCapabilities();
+			// });
+
+			// var takePhotoButton = document.querySelector('button#snap');
+			// // var canvas = document.querySelector("canvas");
+
+			// video.onclick = takePhoto;
+
+			// function takePhoto() {
+			// 	imageCapture
+			// 		.takePhoto()
+			// 		.then(function (blob) {
+			// 			console.log('Took photo:', blob);
+			// 			img.classList.remove('hidden');
+			// 			url = URL.createObjectURL(blob);
+			// 			a.href = url;
+			// 			a.download = 'MyPhoto.png';
+			// 			a.click();
+			// 			window.URL.revokeObjectURL(url);
+			// 		})
+			// 		.catch(function (error) {
+			// 			console.log('takePhoto() error: ', error);
+			// 		});
+			// }
+
+			const getCamera = async () => {
+				const devices = navigator.mediaDevices.enumerateDevices();
+				devices.forEach(function (device) {
 					const div = document.createElement('div');
-					div.innerText = `${t.label}  ${t.label.indexOf('back')}`;
+					div.innerText = JSON.stringify(device);
 					div.style.border = 'solid 1px #000';
-					debug.appendChild(div);
-					if (t.label.indexOf('back') > -1) {
-						targetTrack = t;
-					}
+					debug.append(div);
 				});
-				imageCapture = new ImageCapture(targetTrack);
-				return imageCapture.getPhotoCapabilities();
-			});
 
-			var takePhotoButton = document.querySelector('button#snap');
-			// var canvas = document.querySelector("canvas");
-
-			video.onclick = takePhoto;
-
-			function takePhoto() {
-				imageCapture
-					.takePhoto()
-					.then(function (blob) {
-						console.log('Took photo:', blob);
-						img.classList.remove('hidden');
-						url = URL.createObjectURL(blob);
-						a.href = url;
-						a.download = 'MyPhoto.png';
-						a.click();
-						window.URL.revokeObjectURL(url);
-					})
-					.catch(function (error) {
-						console.log('takePhoto() error: ', error);
-					});
-			}
+				const backDevice = devices.filter(
+					(device) => device.kind === 'videoinput' && device.label.indexOf('back') >= 0,
+				);
+				const div = document.createElement('div');
+				div.innerText = JSON.stringify(device);
+				div.style.border = 'solid 1px #000';
+				div.style.color = '#f00';
+				debug.append(div);
+			};
 
 			// ctx.beginPath();
 			// ctx.lineWidth = 10;
