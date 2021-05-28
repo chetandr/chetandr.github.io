@@ -204,24 +204,22 @@
 				div.style.color = '#f00';
 				debug.append(div);
 				if (backDevice.length) {
-					let constraint =
-						p == 't'
-							? {
-									video: {
-										width: {
-											min: 1280,
-											ideal: 1920,
-											max: 2560,
-										},
-										height: {
-											min: 720,
-											ideal: 1080,
-											max: 1440,
-										},
-										deviceId: backDevice[0].deviceId,
-									},
-							  }
-							: { video: true };
+					let constraint = {
+						video: {
+							width: {
+								min: 1280,
+								ideal: 1920,
+								max: 2560,
+							},
+							height: {
+								min: 720,
+								ideal: 1080,
+								max: 1440,
+							},
+							deviceId: backDevice[0].deviceId,
+						},
+					};
+
 					const div = document.createElement('div');
 					div.innerText = 'Constraint:' + JSON.stringify(constraint);
 					div.style.border = 'solid 1px #000';
