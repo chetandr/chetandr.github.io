@@ -73,12 +73,12 @@
 			// // const overlay = document.getElementById("overlay");
 			// // const context = canvas.getContext("2d");
 			// // const ctx = overlay.getContext("2d");
-			// const img = document.getElementById('photo');
-			// const a = document.createElement('a');
+			const img = document.getElementById('photo');
+			const a = document.createElement('a');
 			// video.height = window.innerHeight;
 			// video.width = window.innerWidth;
 			// document.body.appendChild(a);
-			// a.style = 'display: none';
+			a.style = 'display: none';
 			// function drawEllipse(ctx, x, y, w, h) {
 			// 	var kappa = 0.5522848,
 			// 		ox = (w / 2) * kappa, // control point offset horizontal
@@ -220,14 +220,17 @@
 						},
 					};
 
-					const div = document.createElement('div');
-					div.innerText = 'Constraint:' + JSON.stringify(constraint);
-					div.style.border = 'solid 1px #000';
-					div.style.color = '#f00';
-					debug.append(div);
+					const div1 = document.createElement('div');
+					div1.innerText = 'Constraint:' + JSON.stringify(constraint);
+					div1.style.border = 'solid 1px #000';
+					div1.style.color = '#f00';
+					debug.append(div1);
 					const mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
 					document.querySelector('video').srcObject = mediaStream;
-					tracks = mediaStream.getVideoTracks();
+					tracks = await mediaStream.getVideoTracks();
+					console.log(tracks);
+					imageCapture = new ImageCapture(tracks[0]);
+					const imageHandle = await imageCapture.getPhotoCapabilities();
 					video.onclick = () => {
 						imageCapture
 							.takePhoto()
@@ -250,9 +253,45 @@
 					div.style.border = 'solid 1px #000';
 					div.style.color = '#fff';
 					div.style.backgroundColor = '#f00';
-
+					let constraint = {
+						video: {
+							width: {
+								min: 1280,
+								ideal: 1920,
+								max: 2560,
+							},
+							height: {
+								min: 720,
+								ideal: 1080,
+								max: 1440,
+							},
+						},
+					};
 					debug.append(div);
-					document.querySelector('video').style.display = 'none';
+					// document.querySelector('video').style.display = 'none';
+					const mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
+					document.querySelector('video').srcObject = mediaStream;
+					tracks = await mediaStream.getVideoTracks();
+					console.log(tracks);
+					imageCapture = new ImageCapture(tracks[0]);
+					const imageHandle = await imageCapture.getPhotoCapabilities();
+					console.log(imageHandle);
+					video.onclick = () => {
+						imageCapture
+							.takePhoto()
+							.then(function (blob) {
+								console.log('Took photo:', blob);
+								img.classList.remove('hidden');
+								url = URL.createObjectURL(blob);
+								a.href = url;
+								a.download = 'MyPhoto.png';
+								a.click();
+								window.URL.revokeObjectURL(url);
+							})
+							.catch(function (error) {
+								console.log('takePhoto() error: ', error);
+							});
+					};
 				}
 			};
 
