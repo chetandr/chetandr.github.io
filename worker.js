@@ -1,8 +1,9 @@
 // worker.js
 self.addEventListener('message', function (e) {
 	console.log('WORKERMESSAGE', e);
-	const canvas = document.createElement('canvas');
-	const { media, video } = e;
+	const canvas = self.document.createElement('canvas');
+	const { media } = e;
+    const video = self.document.getElementById("camvideo")
 	const video_width = media.settings.width;
 	const video_height = media.settings.height;
 	const to_width = window.innerWidth;
